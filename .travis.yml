@@ -1,0 +1,38 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker pull surendrajat/twrp-builder:latest
+before_script:
+- cd $HOME && mkdir pbrp
+- wget -q https://github.com/rokibhasansagar/twrp_compressed_sources/releases/download/untagged-274084d99841b6134a78/PitchBlackRecoveryProject-master-norepo-20190430.tar.xz
+  -O $HOME/pbrp.tar.xz
+- tar -xJf pbrp.tar.xz --directory $HOME/pbrp/ && rm pbrp.tar.xz
+script:
+  - cd $HOME/pbrp/ && git clone https://github.com/PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp device/LYF/mobee01a
+  - rm -rf bootable/recovery && git clone https://github.com/PitchBlackRecoveryProject/android_bootable_recovery bootable/recovery
+  - rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb vendor/pb
+  - |
+    docker run --rm -i -v "$(pwd):/root/pbrp/:rw,z" surendrajat/twrp-builder bash << EOF
+    cd /root/pbrp/
+    source build/envsetup.sh ; lunch omni_mobee01a-userdebug ; make -j16 recoveryimage
+    exit
+    EOF
+after_success:
+  - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
+  - cp $HOME/pbrp/out/target/product/mobee01a/recovery.img $HOME/pbrp/PBRP-$version-mobee01a-$(date +"%Y%m%d").img
+
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key: "$GIT_OAUTH_TOKEN_TB"
+  file_glob: true
+  file: $HOME/pbrp/*.img
+  on:
+    tags: false
+    repo: PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp
+    branch: master
+
+branches:
+  except:
+    - /^(?i:untagged)-.*$/
