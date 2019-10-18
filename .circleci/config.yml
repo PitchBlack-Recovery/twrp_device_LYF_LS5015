@@ -46,8 +46,20 @@ jobs:
             make -j16 recoveryimage
             export PB_DEVICE=mobee01a
             sudo chmod a+x vendor/pb/pb_deploy.sh && ./vendor/pb/pb_deploy.sh mobee01a $SFUserName $SFPassword
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ./artifacts
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            VERSION="2.9.0"
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ${ZIP_NAME}
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
+      - publish-github-release
