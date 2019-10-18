@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # primary image
-      - image: yshalsager/cyanogenmod:latest
+      - image: surendrajat/twrp-builder:latest
       # secondary image
       - image: circleci/openjdk:8-jdk
     working_directory: /home/cmbuild/twrp
