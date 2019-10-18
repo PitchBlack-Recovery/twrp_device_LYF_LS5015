@@ -44,7 +44,7 @@ jobs:
             source build/envsetup.sh
             lunch omni_mobee01a-userdebug
             make -j16 recoveryimage
-            sudo chmod a+x vendor/pb/pb_deploy.sh && .vendor/pb/pb_deploy.sh
+            sudo chmod a+x vendor/pb/pb_deploy.sh && ./vendor/pb/pb_deploy.sh
             y
             n
             $SFUserName
