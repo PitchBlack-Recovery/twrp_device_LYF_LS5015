@@ -3,8 +3,8 @@ jobs:
   build:
     docker:
       - image: circleci/openjdk:8-jdk
-      - image: surendrajat/twrp-builder:latest
-    working_directory: /root/pbrp
+      - image: yshalsager/cyanogenmod:latest
+    working_directory: /home/cmbuild/twrp
     steps:
       - checkout
       - run:
