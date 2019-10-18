@@ -13,6 +13,7 @@ jobs:
           name: Make Up2date
           command: |
             sudo apt-get -qqy update && sudo apt-get -qqy upgrade
+            sudo apt-get install repo -y
       - run:
           name: Setup all the prerequisites
           command: |
