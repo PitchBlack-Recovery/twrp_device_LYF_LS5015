@@ -10,43 +10,34 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Make Up2date
+          name: AIO Build
           command: |
-            sudo apt-get -qqy update && sudo apt-get -qqy upgrade
-            sudo apt-get install repo -y
-      - run:
-          name: Setup all the prerequisites
-          command: |
+            set -ex
             DIR=$(pwd) && echo $DIR
-            mkdir ~/bin || echo "bin dir exists"
+            echo "Make Up2date"
+            sudo apt-get -qqy update && sudo apt-get -qqy upgrade
+            echo "Setup all the prerequisites"
             PATH=~/bin:$PATH
             curl --create-dirs -L -o ~/bin/repo -O -L https://github.com/akhilnarang/repo/raw/master/repo
             chmod a+x ~/bin/repo
-            # Set GitAuth Infos too
+            which repo
+            echo "Set GitAuth Infos too"
             git config --global user.email $GitHubMail
             git config --global user.name $GitHubName
             git config --global color.ui true
-      - run:
-          name: Initialize & Sync PBRP repo
-          command: |
+            echo "Initialize & Sync PBRP repo"
             echo $(pwd)
             repo init --depth=1 -q -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
             time repo sync -c -f -q --force-sync --no-clone-bundle --no-tags -j32
-            # Clean up the .repo, no use of it
+            echo "Clean up the .repo, no use of it"
             rm -rf .repo
-            # Source Files are Here now
+            echo "Source Files are Here now"
             ls -la .
-      - run:
-          name: Get the Device Tree on place
-          command: |
-            echo $(pwd)
+            echo "Get the Device Tree on place"
             git clone https://github.com/PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp device/LYF/mobee01a
             rm -rf bootable/recovery && git clone https://github.com/PitchBlackRecoveryProject/android_bootable_recovery bootable/recovery
             rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb vendor/pb
-      - run:
-          name: Start the Build Process
-          command: |
-            echo $(pwd)
+            echo "Start the Build Process"
             source build/envsetup.sh
             lunch omni_mobee01a-userdebug
             make -j16 recoveryimage
