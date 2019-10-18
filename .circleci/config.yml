@@ -6,8 +6,8 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Initialize PBRP repo
-        command: |
+          name: Initialize PBRP repo
+          command: |
           repo init --depth=1 -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
           repo sync
           
