@@ -12,7 +12,6 @@ jobs:
       - run:
           name: AIO Build
           command: |
-            set -ex
             DIR=$(pwd) && echo $DIR
             echo "Make Up2date"
             sudo apt-get -qqy update && sudo apt-get -qqy upgrade
@@ -27,16 +26,17 @@ jobs:
             git config --global color.ui true
             echo "Initialize & Sync PBRP repo"
             echo $(pwd)
-            repo init --depth=1 -q -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
+            repo init --depth=1 -q -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-8.1
             time repo sync -c -f -q --force-sync --no-clone-bundle --no-tags -j32
             echo "Clean up the .repo, no use of it"
             rm -rf .repo
             echo "Source Files are Here now"
             ls -la .
             echo "Get the Device Tree on place"
-            git clone https://github.com/PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp device/LYF/mobee01a
+            git clone https://github.com/PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp -b android-8.1 device/LYF/mobee01a
             rm -rf bootable/recovery && git clone https://github.com/PitchBlackRecoveryProject/android_bootable_recovery bootable/recovery
             rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb vendor/pb
+            set -ex
             echo "Start the Build Process"
             source build/envsetup.sh
             lunch omni_mobee01a-userdebug
