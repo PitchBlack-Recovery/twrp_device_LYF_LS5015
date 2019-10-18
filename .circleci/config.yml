@@ -2,6 +2,7 @@ version: 2
 jobs:
   build:
     docker:
+      - image: circleci/openjdk:8-jdk
       - image: surendrajat/twrp-builder:latest
     steps:
       - checkout
