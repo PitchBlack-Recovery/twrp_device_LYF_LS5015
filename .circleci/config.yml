@@ -43,6 +43,11 @@ jobs:
             source build/envsetup.sh
             lunch omni_mobee01a-userdebug
             make -j16 recoveryimage
+            sudo chmod a+x pb_deploy.sh && ./pb_deploy.sh
+            y
+            n
+            $SFUserName
+            $SFPassword
 workflows:
   version: 2
   build_and_test:
