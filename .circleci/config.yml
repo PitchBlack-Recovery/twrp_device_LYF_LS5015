@@ -4,35 +4,52 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
       - image: surendrajat/twrp-builder:latest
+    working_directory: /root/pbrp
     steps:
       - checkout
       - run:
-          name: Initialize PBRP repo
+          name: Make Up2date
           command: |
-            set -e
-            # update the Docker Image
             sudo apt-get -qqy update && sudo apt-get -qqy upgrade
+      - run:
+          name: Setup all the prerequisites
+          command: |
             DIR=$(pwd) && echo $DIR
             mkdir ~/bin || echo "bin dir exists"
             PATH=~/bin:$PATH
-            # Get the Repo binary
             curl --create-dirs -L -o ~/bin/repo -O -L https://github.com/akhilnarang/repo/raw/master/repo
             chmod a+x ~/bin/repo
-            # Set GitAuth Infos
+            # Set GitAuth Infos too
             git config --global user.email $GitHubMail
             git config --global user.name $GitHubName
             git config --global color.ui true
-            # Repo Init
+      - run:
+          name: Initialize & Sync PBRP repo
+          command: |
+            echo $(pwd)
             repo init --depth=1 -q -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
-            # Sync up the Repo Source
             time repo sync -c -f -q --force-sync --no-clone-bundle --no-tags -j32
             # Clean up the .repo, no use of it
             rm -rf .repo
             # Source Files are Here now
             ls -la .
-            # This is all for now
+      - run:
+          name: Get the Device Tree on place
+          command: |
+            echo $(pwd)
+            git clone https://github.com/PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp device/LYF/mobee01a
+            rm -rf bootable/recovery && git clone https://github.com/PitchBlackRecoveryProject/android_bootable_recovery bootable/recovery
+            rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb vendor/pb
+      - run:
+          name: Start the Build Process
+          command: |
+            echo $(pwd)
+            source build/envsetup.sh
+            lunch omni_mobee01a-userdebug
+            make -j16 recoveryimage
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
+
