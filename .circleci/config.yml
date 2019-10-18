@@ -2,8 +2,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:8-jdk
+      # primary image
       - image: yshalsager/cyanogenmod:latest
+      # secondary image
+      - image: circleci/openjdk:8-jdk
     working_directory: /home/cmbuild/twrp
     steps:
       - checkout
@@ -52,4 +54,3 @@ workflows:
   build_and_test:
     jobs:
       - build
-
