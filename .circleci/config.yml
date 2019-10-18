@@ -8,9 +8,8 @@ jobs:
       - run:
           name: Initialize PBRP repo
           command: |
-          repo init --depth=1 -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
-          repo sync
-          
+          repo init --depth=1 -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0 &&  repo sync
+
 workflows:
   version: 2
   build_and_test:
