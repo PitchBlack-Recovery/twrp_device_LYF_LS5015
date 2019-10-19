@@ -54,7 +54,7 @@ jobs:
             make -j16 recoveryimage
             sudo chmod a+x vendor/pb/pb_deploy.sh && ./vendor/pb/pb_deploy.sh mobee01a $SFUserName $SFPassword
             export VERSION="2.9.0"
-            export BUILDFILE=$(find $(pwd)/out/target/product/$codename/PitchBlack*.zip 2>/dev/null)
+            export BUILDFILE=$(find $(pwd)/out/target/product/mobee01a/PitchBlack*.zip 2>/dev/null)
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ${BUILDFILE}
 workflows:
   version: 2
