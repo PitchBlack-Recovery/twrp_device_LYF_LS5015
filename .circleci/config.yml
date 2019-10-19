@@ -43,7 +43,7 @@ jobs:
             echo "Source Files are Here now"
             ls -la .
             echo "Get the Device Tree on place"
-            git clone https://github.com/PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp -b android-8.1 device/LYF/mobee01a && cd device/LYF/mobee01a && git fetch origin test-ci && git cherry-pick ab943441983e89a599cf5ebd224aa1fc1a5225e0 && git cherry-pick ab943441983e89a599cf5ebd224aa1fc1a5225e0...f89f8a630a6268530974ab7badaabf383f447db2 && cd ../../..
+            git clone https://PitchBlackRecoveryProect:$GITHUB_TOKEN@github.com/PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp -b android-8.1 device/LYF/mobee01a && cd device/LYF/mobee01a && git fetch origin test-ci && git cherry-pick ab943441983e89a599cf5ebd224aa1fc1a5225e0 && git cherry-pick ab943441983e89a599cf5ebd224aa1fc1a5225e0...f89f8a630a6268530974ab7badaabf383f447db2 && cd ../../..
             mkdir -p .repo/manifests && mv default.xml .repo/manifests/default.xml
             rm -rf bootable/recovery && git clone https://github.com/PitchBlackRecoveryProject/android_bootable_recovery -b android-9.0 bootable/recovery
             rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb -b pb vendor/pb
