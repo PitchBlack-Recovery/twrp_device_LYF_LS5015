@@ -47,7 +47,6 @@ jobs:
             mkdir -p .repo/manifests && mv default.xml .repo/manifests/default.xml
             rm -rf bootable/recovery && git clone https://github.com/PitchBlackRecoveryProject/android_bootable_recovery -b android-9.0 bootable/recovery
             rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb -b pb vendor/pb
-            set -ex
             echo "Start the Build Process"
             source build/envsetup.sh
             lunch omni_mobee01a-userdebug
