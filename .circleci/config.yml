@@ -22,6 +22,12 @@ jobs:
             rm -rf $(la | grep -v .circleci)
             curl --create-dirs -L -o ~/bin/repo -O -L https://github.com/akhilnarang/repo/raw/master/repo
             chmod a+x ~/bin/repo
+            echo "Install ghr binary"
+            wget -q 'https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz'
+            tar -xzf ghr_v0.13.0_linux_amd64.tar.gz && rm ghr_v0.13.0_linux_amd64.tar.gz
+            cp ghr_v0.13.0_linux_amd64/ghr ~/bin && PATH=~/bin:$PATH
+            rm -rf ghr_v0.13.0_linux_amd64/
+            which ghr
             which repo
             echo "Set GitAuth Infos too"
             git config --global user.email $GitHubMail
