@@ -20,7 +20,7 @@ jobs:
             export VERSION="2.9.0"
             export VENDOR="LYF"
             export CODENAME="mobee01a"
-            export LUNCH="omni_mobee01a-userdebug"
+            export BUILD_LUNCH="omni_mobee01a-userdebug"
             DIR=$(pwd) && echo $DIR
             echo "Make Up2date"
             sudo apt-get -qqy update && sudo apt-get -qqy upgrade && sudo apt-get update && sudo apt-get --assume-yes install wget libstdc++6 software-properties-common && sudo apt-get update && sudo add-apt-repository ppa:openjdk-r/ppa -y && sudo apt-get update && sudo apt-get purge --auto-remove openjdk* -y && sudo apt-get install openjdk-8-jdk -y && sudo update-alternatives --config java
@@ -56,7 +56,7 @@ jobs:
             rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb -b pb vendor/pb
             echo "Start the Build Process"
             source build/envsetup.sh
-            lunch ${LUNCH}
+            lunch ${BUILD_LUNCH}
             make -j16 recoveryimage
             echo "Deploying"
             sudo chmod a+x vendor/pb/pb_deploy.sh && ./vendor/pb/pb_deploy.sh ${CODENAME} ${SFUserName} ${SFPassword} ${GITHUB_TOKEN}
