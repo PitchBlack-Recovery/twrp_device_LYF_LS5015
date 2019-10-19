@@ -14,6 +14,13 @@ jobs:
       - run:
           name: AIO Build
           command: |
+            echo "Initializing"
+            export MANIFEST_BRANCH="PBRP"
+            export PBRP_BRANCH="android-9.0"
+            export VERSION="2.9.0"
+            export VENDOR="LYF"
+            export CODENAME="mobee01a"
+            export BUILD_LUNCH="omni_mobee01a-userdebug"
             DIR=$(pwd) && echo $DIR
             echo "Make Up2date"
             sudo apt-get -qqy update && sudo apt-get -qqy upgrade && sudo apt-get update && sudo apt-get --assume-yes install wget libstdc++6 software-properties-common && sudo apt-get update && sudo add-apt-repository ppa:openjdk-r/ppa -y && sudo apt-get update && sudo apt-get purge --auto-remove openjdk* -y && sudo apt-get install openjdk-8-jdk -y && sudo update-alternatives --config java
@@ -35,7 +42,7 @@ jobs:
             git config --global color.ui true
             echo "Initialize & Sync PBRP repo"
             echo $(pwd)
-            repo init --depth=1 -q -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b PBRP
+            repo init --depth=1 -q -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b ${MANIFEST_BRANCH}
             time repo sync -c -f -q --force-sync --no-clone-bundle --no-tags -j32
             echo "Clean up the .repo, no use of it"
             cp .repo/manifests/default.xml $(pwd)/default.xml
@@ -43,17 +50,17 @@ jobs:
             echo "Source Files are Here now"
             ls -la .
             echo "Get the Device Tree on place"
-            git clone https://PitchBlackRecoveryProect:$GITHUB_TOKEN@github.com/PitchBlackRecoveryProject/android_device_LYF_mobee01a-pbrp -b android-8.1 device/LYF/mobee01a && cd device/LYF/mobee01a && git fetch origin test-ci && git cherry-pick ab943441983e89a599cf5ebd224aa1fc1a5225e0 && git cherry-pick ab943441983e89a599cf5ebd224aa1fc1a5225e0...f89f8a630a6268530974ab7badaabf383f447db2 && cd ../../..
+            git clone https://PitchBlackRecoveryProect:$GITHUB_TOKEN@github.com/PitchBlackRecoveryProject/${CIRCLE_PROJECT_REPONAME} device/${VENDOR}/${CODENAME}
             mkdir -p .repo/manifests && mv default.xml .repo/manifests/default.xml
-            rm -rf bootable/recovery && git clone https://github.com/PitchBlackRecoveryProject/android_bootable_recovery -b android-9.0 bootable/recovery
+            rm -rf bootable/recovery && git clone https://github.com/PitchBlackRecoveryProject/android_bootable_recovery -b ${PBRP_BRANCH} bootable/recovery
             rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb -b pb vendor/pb
             echo "Start the Build Process"
             source build/envsetup.sh
-            lunch omni_mobee01a-userdebug
+            lunch ${BUILD_LUNCH}
             make -j16 recoveryimage
-            sudo chmod a+x vendor/pb/pb_deploy.sh && ./vendor/pb/pb_deploy.sh mobee01a $SFUserName $SFPassword $GITHUB_TOKEN
-            export VERSION="2.9.0"
-            export BUILDFILE=$(find $(pwd)/out/target/product/mobee01a/PitchBlack*.zip 2>/dev/null)
+            echo "Deploying"
+            sudo chmod a+x vendor/pb/pb_deploy.sh && ./vendor/pb/pb_deploy.sh ${CODENAME} ${SFUserName} ${SFPassword} ${GITHUB_TOKEN}
+            export BUILDFILE=$(find $(pwd)/out/target/product/${CODENAME}/PitchBlack*.zip 2>/dev/null)
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ${BUILDFILE}
 workflows:
   version: 2
