@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -7,13 +7,14 @@ jobs:
     environment:
       MANIFEST_BRANCH: 'PBRP'
       PBRP_BRANCH: 'android-9.0' # bootable_recovery
-      VERSION: '2.9.0'
+      VERSION: '2.9.1'
       VENDOR: 'LYF'
       CODENAME: 'mobee01a'
       BUILD_LUNCH: 'omni_mobee01a-userdebug'
+      PB_OFFICIAL: 'true'
+      # TEST_BUILD: 'true'
     working_directory: /home/builder/pitchblack
     steps:
-      - checkout
       - run:
           name: AIO Build
           command: |
@@ -21,9 +22,8 @@ jobs:
             git config --global user.email $GitHubMail
             git config --global user.name $GitHubName
             git config --global color.ui true
-            export TEST_BUILD=true
             wget -q https://raw.githubusercontent.com/PitchBlackRecoveryProject/vendor_pb/pb/build.sh
-            source build.sh ${SFUserName} ${SFPassword} ${GITHUB_TOKEN}
+            source build.sh
 workflows:
   version: 2
   build_and_test:
