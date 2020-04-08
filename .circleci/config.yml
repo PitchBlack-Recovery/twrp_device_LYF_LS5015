@@ -5,12 +5,12 @@ jobs:
       # new all-in-one docker image
       - image: fr3akyphantom/pitchblack-builder:latest
     environment:
-      MANIFEST_BRANCH: 'PBRP'
+      MANIFEST_BRANCH: 'twrp-8.1'
       PBRP_BRANCH: 'android-9.0' # bootable_recovery
       VERSION: '2.9.1'
       VENDOR: 'LYF'
       CODENAME: 'mobee01a'
-      BUILD_LUNCH: 'omni_mobee01a-userdebug'
+      BUILD_LUNCH: 'omni_mobee01a-eng'
       PB_OFFICIAL: 'true'
       # TEST_BUILD: 'true'
     working_directory: /home/builder/pitchblack
